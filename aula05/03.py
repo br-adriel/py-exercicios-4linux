@@ -35,6 +35,7 @@ def consulta():
 			for dado in linha:
 				if termo.lower() in dado.lower():
 					resultado.append(linha)
+					break
 
 	print(f'\n{len(resultado)} resultados encontrado(s)')
 	for item in resultado:
