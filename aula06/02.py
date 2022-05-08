@@ -2,19 +2,19 @@ class Fila():
 	def __init__(self):
 		self.__fila = []
 
-	def adicionarPessoa(pessoa):
+	def adicionarPessoa(self, pessoa):
 		if len(self.__fila) > 10:
 			return 'A fila está cheia'
 		self.__fila.append(pessoa)
 
-	def atender():
+	def atender(self):
 		if len(self.__fila) == 0:
 			return 'Todos foram atendidos'
 		atendido = self.__fila[0]
 		del self.__fila[0]
 		return atendido
 
-	def darPrioridade():
+	def darPrioridade(self):
 		nova_fila = []
 		for pessoa in self.__fila:
 			if pessoa > 65:
@@ -26,6 +26,6 @@ class Fila():
 
 		self.__fila = nova_fila
 
-	def getFila():
+	def getFila(self):
 		return self.__fila
 
