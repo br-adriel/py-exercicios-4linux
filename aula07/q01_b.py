@@ -1,5 +1,15 @@
 import csv
 
+def fazer_cadastro(item):
+	try:
+		with open('cadastros.csv', 'a') as arquivo:
+			arquivo.write(item)
+
+		print('\nCadastro realizado com sucesso!')
+	except Exception:
+		print('Um erro ocorreu')
+
+
 def cadastro():
 	opcao = 1
 	while opcao == 1:
@@ -12,13 +22,7 @@ def cadastro():
 
 		linhaCadastro = f'{cpf};{nome};{idade};{sexo};{endereco}\n'
 
-		try:
-			with open('cadastros.csv', 'a') as arquivo:
-				arquivo.write(linhaCadastro)
-
-			print('\nCadastro realizado com sucesso!')
-		except Exception:
-			print('Um erro ocorreu')
+		fazer_cadastro(linhaCadastro)
 
 		opcao = 0
 		while opcao not in [1, 2]:
@@ -30,13 +34,8 @@ def cadastro():
 				print('Valor inválido')
 
 
-def consulta():
+def fazer_consulta(termo):
 	resultado = []
-
-	termo = input('\nDigite o termo de busca: ')
-
-	print('\nPesquisando...')
-
 	try :
 		with open('cadastros.csv', 'r') as arquivo:
 			dados = csv.reader(arquivo, delimiter=';')
@@ -47,15 +46,48 @@ def consulta():
 						break
 	except Exception:
 		print('Um erro ocorreu')
-	else:
-		print(f'\n{len(resultado)} resultados encontrado(s)')
-		for item in resultado:
-			print('-' * 50)
-			print(f'CPF: {item[0]}')
-			print(f'Nome: {item[1]}')
-			print(f'idade: {item[2]}')
-			print(f'Sexo: {item[3]}')
-			print(f'Endereço: {item[4]}')
+		resultado = []
+	finally:
+		return resultado;
+
+
+def consulta():
+	termo = input('\nDigite o termo de busca: ')
+
+	print('\nPesquisando...')
+
+	resultado = fazer_consulta(termo)
+	
+	print(f'\n{len(resultado)} resultados encontrado(s)')
+	for item in resultado:
+		print('-' * 50)
+		print(f'CPF: {item[0]}')
+		print(f'Nome: {item[1]}')
+		print(f'idade: {item[2]}')
+		print(f'Sexo: {item[3]}')
+		print(f'Endereço: {item[4]}')
+
+
+def fazer_exclusao(cpf):
+	with open('cadastros.csv', 'r') as arquivo:
+		try:
+			conteudo = csv.reader(arquivo, delimiter=';')
+		except Exception:
+			print('Um erro ocorreu')
+		else:
+			novo_conteudo = []
+			for linha in conteudo:
+				if cpf != linha[0]:
+					novo_conteudo.append(linha)
+
+			try:
+				with open('cadastros.csv', 'w') as arquivo2:
+					gravador = csv.writer(arquivo2, delimiter=';')
+
+					for linha in novo_conteudo:
+						gravador.writerow(linha)
+			except Exception:
+				print('Um erro ocorreu')		
 
 
 def excluir():
@@ -69,28 +101,8 @@ def excluir():
 
 	if certeza == '1':
 		print('\nExcluindo...')
-
-		with open('cadastros.csv', 'r') as arquivo:
-			try:
-				conteudo = csv.reader(arquivo, delimiter=';')
-			except Exception:
-				print('Um erro ocorreu')
-			else:
-				novo_conteudo = []
-				for linha in conteudo:
-					if cpf != linha[0]:
-						novo_conteudo.append(linha)
-
-				try:
-					with open('cadastros.csv', 'w') as arquivo2:
-						gravador = csv.writer(arquivo2, delimiter=';')
-				except Exception:
-					print('Um erro ocorreu')
-				else:
-					for linha in novo_conteudo:
-						gravador.writerow(linha)
-
-					print('\nRegistro exlcuido com sucesso')
+		fazer_exclusao(cpf)
+		print('\nRegistro exlcuido com sucesso')
 
 
 def main():
